@@ -1,0 +1,73 @@
+<page xmlns="http://projectmallard.org/1.0/"
+      type="topic"
+      id="steptwo">
+<info>
+  <link type="guide" xref="index" />
+  <link type="next" xref="stepthree" />
+</info>
+<title>Step two: Introspecting the greeter</title>
+
+<note style="tip sidebar">
+<screen>
+<output style="prompt">$ </output><input>git checkout steptwo</input>
+<output style="prompt">$ </output><input>git diff stepone</input>
+</screen>
+</note>
+
+<p>Now let's move on to the real topic: introspecting the code. This is done by the program <cmd>g-ir-scanner</cmd>. This program does two things: looks in our C source code and headers for annotations, and runs the compiled program to get information about installed signals and properties.  To make this work, we have to add some code to our program to make it recognize a command line option.</p>
+
+<p>We add an include to the top of <file>main.c</file>:</p>
+
+<code mime="text/x-csrc"><![CDATA[
+#include <girepository.h>
+]]></code>
+
+<p>And some code to the <code>main</code> function:</p>
+
+<code mime="text/x-csrc"><![CDATA[
+    GOptionContext *ctx;
+    GError *error = NULL;
+
+    ctx = g_option_context_new (NULL);
+    g_option_context_add_group (ctx, g_irepository_get_option_group ());  
+
+    if (!g_option_context_parse (ctx, &argc, &argv, &error)) {
+        g_print ("greeter: %s\n", error->message);
+        return 1;
+    }
+]]></code>
+
+<p>We also need some changes to the Makefile since we're now also using the <sys>gobject-introspection-1.0</sys> package. We also need to link against the <sys>gmodule-2.0</sys> library since the GObject Introspection code uses that; I don't know why <cmd>pkg-config --libs gobject-introspection-1.0</cmd> doesn't include that as a dependency. </p>
+
+<p>To compile this, you need to make sure you have the <app>GObject Introspection</app> package installed, including files necessary for development.  On a Ubuntu or Debian-based system, <cmd>sudo apt-get install libgirepository1.0-dev</cmd> should bring in everything you need.</p>
+
+<comment>TODO: Add the Fedora equivalent</comment>
+
+<p>Recompile it with <cmd>make</cmd>.  Our program now has a basic command line option scanner, type <cmd>./greeter --help</cmd> to verify that it works.  You'll see no mention of any option to do introspection, not even with <cmd>--help-all</cmd>.  It's hidden, since it's not really useful for end users of your program, but it's there:</p>
+
+<screen>
+<output type="prompt">$ </output><input>./greeter --introspect-dump </input>
+<output>greeter: Missing argument for --introspect-dump</output>
+</screen>
+
+<note style="advanced">
+<p>You don't really need to know this to use <app>GObject Introspection</app>, but if you're curious about what argument the <cmd>--introspect-dump</cmd> option is expecting, see the documentation for <link href="https://developer.gnome.org/gi/unstable/gi-girepository.html#g-irepository-dump"><code>g_irepository_dump</code></link>, to which the argument is sent.</p>
+</note>
+
+<p>Now, we're ready to run <cmd>g-ir-scanner</cmd>. Again, in a real situation we'd use a build tool such as <app>automake</app> to put this together for us, but it's instructional to try it out directly on the command line.</p>
+
+<screen>
+<output type="prompt">$ </output><input>g-ir-scanner tut-greeter.[ch] \
+    --program=./greeter \
+    `pkg-config --cflags gobject-introspection-1.0` --include=GObject-2.0 \
+    --namespace=Tut --nsversion=0.1 --output=Tut-0.1.gir</input>
+</screen>
+
+<p>First, we tell the scanner what source files to look in. Then, we tell it that it is a program we're introspecting and not a library, and where to find this program. Next, since the scanner needs to expand the headers in order to correctly parse the code, we need to give it the same <cmd>pkg-config --cflags</cmd> output as is used when compiling.  We tell the scanner that GObject-2.0 is an introspection dependency to our namespace.  Last, we call our namespace <code>Tut</code> with namespace version <code>0.1</code> and ask for output to the file <file>Tut-0.1.gir</file>.</p>
+
+<p>Take a good look at this file.  It's an XML file that should hopefully be quite self explanatory.</p>
+
+<links type="prevnext" />
+
+
+</page>

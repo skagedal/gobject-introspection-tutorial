@@ -1,0 +1,8 @@
+<page xmlns="http://projectmallard.org/1.0/"
+      type="topic"
+      id="stepthree">
+<info>
+  <link type="guide" xref="index" />
+</info>
+<title>Step three: Hooking up JavaScript</title>
+</page>
