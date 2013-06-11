@@ -2,7 +2,106 @@
       type="topic"
       id="stepthree">
 <info>
+  <credit type="author copyright">
+    <name>Simon Kågedal Reimer</name>
+    <email>skagedal@gmail.com</email>
+    <years>2013</years>
+  </credit>
+  <include href="cc-by-sa-3-0.xml" xmlns="http://www.w3.org/2001/XInclude"/>
   <link type="guide" xref="index" />
+  <link type="next" xref="stepfour" />
+  <title type="sort">Step 03</title>
 </info>
-<title>Step three: Hooking up JavaScript</title>
+<title>Hooking up JavaScript</title>
+
+<note style="tip sidebar">
+<screen>
+<output style="prompt">$ </output><input>git checkout stepthree</input>
+<output style="prompt">$ </output><input>git diff steptwo_gir</input>
+<output style="prompt">$ </output><input>make</input>
+</screen>
+</note>
+
+<p>Now we're going to embed a little bit of JavaScript into our
+program. This is useful if you want to build your program in layers,
+for example if you want a core written in C for efficiency, and a GUI
+layer written in JavaScript for ease of use.
+Read <link href="http://blog.ometer.com/2008/08/25/embeddable-languages/">Havoc's
+blog post</link> about the benifits of this approach.  It's also a
+very good way to make your program extendable through plugins.  If
+this is what you want to do, you might want to take a look
+at <link href="https://live.gnome.org/Libpeas">Libpeas</link> which is
+a plugins engine based on GObject Introspection.</p>
+
+<p>There are two JavaScript bindings available for GObject
+Introspection, <app>seed</app> which uses the <app>WebKit</app>
+JavaScript engine and <app>Gjs</app> which uses
+Mozilla's <app>SpiderMonkey</app> engine.  The latter is the one used
+by for example the Gnome Shell, and is the one we're going to use
+here.</p>
+
+<p>We add a simple JavaScript file, <file>main.js</file>:</p>
+
+<code mime="text/javascript">
+const Tut = imports.gi.Tut; 
+
+let greeter = new Tut.Greeter({ greetee: 'JavaScript user' });
+greeter.greet();
+</code>
+
+<p>The binding allows to send in a JavaScript object as an argument to
+GObject constructors for initial values of properties. We use this to
+set the <code>greetee</code> property to <code>'JavaScript
+user'</code>.</p>
+
+<p>To call this code from our main program, we need to add a
+dependency on gjs. FIXME. We now add an include
+to <file>main.c</file>:</p>
+
+<code mime="text/x-csrc"><![CDATA[
+#include <gjs/gjs.h>
+]]></code>
+
+<p>And declare some new variables at the top of the <code>main</code> function:</p>
+
+<code mime="text/x-csrc"><![CDATA[
+    int status = 0;
+    GjsContext *gjs;
+]]></code>
+
+<p>Instead of the code that creates a <code>TutGreeter</code> and
+calls <code>tut_greeter_greet</code>, we write:</p>
+
+<code mime="text/x-csrc"><![CDATA[
+    gjs = gjs_context_new ();
+    if (!gjs_context_eval_file (gjs, "main.js", &status, &error)) {
+        g_print ("greeter: couldn't evaluate JavaScript: %s\n",
+                 error->message);
+        g_clear_error (&error);
+    }
+    g_object_unref (gjs);
+]]></code>
+
+<p>There is no reference documentation for how to use the <app>Gjs</app> 
+library, so it might be helpful to have a look in the sources, <link
+href="https://git.gnome.org/browse/gjs/tree/gjs/context.h">context.h</link>
+and <link 
+href="https://git.gnome.org/browse/gjs/tree/gjs/context.c">context.c</link>.
+
+The <code>gjs_context_eval_file</code> function evaluates, i.e. runs,
+the JavaScript code in the specified file; there is a similar function
+called <code>gjs_context_eval</code> that evaluates JavaScript code from 
+a string.  Besides any error, these functions also deliver a status code
+from the JavaScript.  This is similar to the exit code returned by 
+regular executables, i.e., 0 means success.  We propagate this from our C
+<code>main</code> function:
+
+<code mime="text/x-csrc"><![CDATA[
+    return status;
+]]></code>
+
+
+<p>Compile and run it!</p>
+
+<links type="prevnext" />
 </page>

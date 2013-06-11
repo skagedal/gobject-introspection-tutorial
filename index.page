@@ -2,7 +2,12 @@
       type="guide"
       id="index">
 <info>
-<!--  <link type="next" xref="stepone" /> -->
+  <credit type="author copyright">
+    <name>Simon Kågedal Reimer</name>
+    <email>skagedal@gmail.com</email>
+    <years>2013</years>
+  </credit>
+  <include href="cc-by-sa-3-0.xml" xmlns="http://www.w3.org/2001/XInclude"/>
 </info>
 <title>GObject Introspection Tutorial</title>
 <subtitle>A multilevel Hello World</subtitle>
@@ -18,17 +23,17 @@ Yelp:
 <title>Introduction</title>
 <p>
 This tutorial will show you how to use <app>GObject
-Introspection</app> to give easy access to your C code from higher
-level programming languages.  We'll use a trivial "Hello World"
-example that only depends on <app>GLib</app> and <app>GObject</app>.
-You are assumed to know the basics on how developing with
+Introspection</app> to access to C code from higher level programming
+languages.  We'll use a simple "Hello World" example that only depends
+on <app>GLib</app> and <app>GObject</app>.  You are assumed to know
+the basics on how developing with
 <app>GObject</app> works; if not, freshen up with the <link
 href="http://library.gnome.org/devel/gobject/unstable/pt02.html">GObject
 tutorial</link>. We'll look at how to use your classes from JavaScript
 using <app>Gjs</app> and Python using <app>PyGObject</app>.</p>
 </section>
 
-<links type="topic" groups="stepone steptwo stepthree stepfour" />
+<links type="topic"/>
 
 <section>
 <title>About this tutorial</title>

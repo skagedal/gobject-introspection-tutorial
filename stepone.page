@@ -2,24 +2,43 @@
       type="topic"
       id="stepone">
 <info>
+  <credit type="author copyright">
+    <name>Simon Kågedal Reimer</name>
+    <email>skagedal@gmail.com</email>
+    <years>2013</years>
+  </credit>
+  <include href="cc-by-sa-3-0.xml" xmlns="http://www.w3.org/2001/XInclude"/>
   <link type="guide" xref="index" />
   <link type="next" xref="steptwo" />
+  <title type="sort">Step 01</title>
 </info>
-<title>Step one: A simple GObject class</title>
+<title>Creating a simple GObject class</title>
 
-<p>First, we'll create a very simple <code>GObject</code> called <code>TutGreeter</code>.  Besides the boilerplate GObject stuff, it has one method: <code>tut_greeter_greet</code> that displays a well known friendly greeting on standard output, and one property, <code>greetee</code> that holds the name of the entity to greet.</p>
+<p>First, we'll create a very simple <code>GObject</code>
+called <code>TutGreeter</code>.  It has one
+method, <code>tut_greeter_greet</code>, that writes a friendly
+greeting ton standard output, and one property, <code>greetee</code>
+that holds the name of the entity to greet.</p>
 
-<p>You can follow along as we move forward in the tutorial by checking out a git project:</p>
+<p>If you're a <app>git</app> user, you can follow the steps in the tutorial by cloning a repository:</p>
 
 <screen>
-<output style="prompt">$ </output><input>git clone https://git.gitorious.org/gobject-introspection-tutorial/code.git tutorial</input>
-<output style="prompt">$ </output><input>cd tutorial</input>
+<output style="prompt">$ </output><input>git clone https://git.gitorious.org/gobject-introspection-tutorial/code.git tutorial-code</input>
+<output style="prompt">$ </output><input>cd tutorial-code</input>
 <output style="prompt">$ </output><input>git checkout stepone</input>
 </screen>
 
-<p><code>TutGreeter</code> is defined in <link href="https://www.gitorious.org/gobject-introspection-tutorial/code/blobs/stepone/tut-greeter.h"><file>tut-greeter.h</file></link> and <link href="https://www.gitorious.org/gobject-introspection-tutorial/code/blobs/stepone/tut-greeter.c"><code>tut-greeter.c</code></link>.  Most of this is standard GObject stuff, seen in all GObject C projects.  This is how we initialize the class:</p>
+<p>If you prefer not to use <app>git</app>, you can just copy the
+files from the links below.</p>
 
-<code mime="text/x-csrc">
+<p><code>TutGreeter</code> is defined
+in <link href="https://www.gitorious.org/gobject-introspection-tutorial/code/blobs/stepone/tut-greeter.h"><file>tut-greeter.h</file></link>
+and <link href="https://www.gitorious.org/gobject-introspection-tutorial/code/blobs/stepone/tut-greeter.c"><file>tut-greeter.c</file></link>.
+Most of this is boilerplate GObject code, seen in all GObject C
+projects, so in this text we'll focus on the interesting bits.  This
+is how the class is initialized:</p>
+
+<code mime="text/x-csrc"><![CDATA[
 static void
 tut_greeter_class_init (TutGreeterClass *klass)
 {
@@ -30,24 +49,26 @@ tut_greeter_class_init (TutGreeterClass *klass)
     object_class->finalize = tut_greeter_finalize;
 
     obj_properties[PROP_GREETEE] = 
-	g_param_spec_string ("greetee",
-			     "Greetee",
-			     "The entity to greet.",
-			     "World",
-			     G_PARAM_READWRITE |
-			     G_PARAM_CONSTRUCT);
+        g_param_spec_string ("greetee",
+                             "Greetee",
+                             "The entity to greet.",
+                             "World",
+                             G_PARAM_READWRITE |
+                             G_PARAM_CONSTRUCT);
 
     g_object_class_install_properties (object_class,
-				       N_PROPERTIES,
-				       obj_properties);
+                                       N_PROPERTIES,
+                                       obj_properties);
 
     g_type_class_add_private (object_class, sizeof (TutGreeterPrivate));
 }
-</code>
+]]></code>
 
-<p>This installs a property <code>greetee</code> with the default value of <code>"World"</code>, that is set on construction. The <code>greet</code> method then looks like this:</p>
+<p>This installs a property <code>greetee</code> with the default
+value of <code>"World"</code>. The <code>greet</code> method looks
+like this:</p>
 
-<code mime="text/x-csrc">
+<code mime="text/x-csrc"><![CDATA[
 /**
  * tut_greeter_greet:
  * @greeter: a #TutGreeter
@@ -67,13 +88,20 @@ tut_greeter_greet (TutGreeter *greeter)
     printf ("Hello, %s!\n", priv->greetee);
 
 }
-</code>
+]]></code>
 
-<p>As you see, all code intended to be used from the outside is documented with a <app>GtkDoc</app> header.  This is of course good practice in any case, but for what we're about to do – introspection – it's a necessity.  GObject Introspection uses these GtkDoc sections with some special annotations to figure out how the function is to be used and to map things like output parameters to an appropriate construct in the bound language.</p>
+<p>As you see, all code intended to be used from the outside is
+documented with <app>GtkDoc</app> headers.  This is always good
+practice, but for what we're about to do&#160;– introspection&#160;–
+it's a necessity.  GObject Introspection uses these GtkDoc sections
+with some special annotations to figure out how the function is to be
+used, so that language bindings can map things like output parameters
+to appropriate constructs.</p>
 
-<p>We also have a simple <code>main</code> function in <link href="https://www.gitorious.org/gobject-introspection-tutorial/code/blobs/stepone/main.c"><file>main.c</file></link>:</p>
+<p>We also have a simple <code>main</code> function
+in <link href="https://www.gitorious.org/gobject-introspection-tutorial/code/blobs/stepone/main.c"><file>main.c</file></link>:</p>
 
-<code mime="text/x-csrc">
+<code mime="text/x-csrc"><![CDATA[
 int main (int argc, char *argv[]) 
 {
     TutGreeter *greeter;
@@ -83,9 +111,18 @@ int main (int argc, char *argv[])
 
     return 0;
 }
-</code>
+]]></code>
 
-<p>Last, we have a <link href="https://www.gitorious.org/gobject-introspection-tutorial/code/blobs/stepone/Makefile"><file>Makefile</file></link>.  In a real-world project, you'll want to use a more sophisticated build system; the GNU build tool chain with <app>autoconf</app>, <app>automake</app> and friends is the most commonly used and best supported system.  For the purpose of this tutorial, I find that a simple GNU Makefile makes it easy to follow what's happening.  Just type <cmd>make</cmd> at the console and you should get a binary called <file>greeter</file>.  Run it, and feel greeted.</p>
+<p>Last, we have
+a <link href="https://www.gitorious.org/gobject-introspection-tutorial/code/blobs/stepone/Makefile"><file>Makefile</file></link>.
+In a real-world project, it's preferable to use a more sophisticated
+build system; the GNU build tool chain
+with <app>autoconf</app>, <app>automake</app> and friends is the most
+commonly used and best supported system.  For the purpose of this
+tutorial, an ordinary GNU Makefile makes it easy to follow what's
+happening.  Just type <cmd>make</cmd> at the console and you should
+get a binary called <file>greeter</file>.  Run it, and feel
+greeted.</p>
 
 <links type="prevnext" />
 </page>

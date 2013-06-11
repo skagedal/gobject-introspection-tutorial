@@ -2,8 +2,65 @@
       type="topic"
       id="stepfour">
 <info>
+  <credit type="author copyright">
+    <name>Simon Kågedal Reimer</name>
+    <email>skagedal@gmail.com</email>
+    <years>2013</years>
+  </credit>
+  <include href="cc-by-sa-3-0.xml" xmlns="http://www.w3.org/2001/XInclude"/>
   <link type="guide" xref="index" />
+  <title type="sort">Step 04</title>
 </info>
-<title>Step four: Make it a library</title>
+<title>Make it a library</title>
 
+<p>...</p>
+
+<p>Now, you can easily access your class from a JavaScript console:</p>
+
+<screen>
+<output style="prompt">$ </output><input>gjs-console</input>
+
+</screen>
+
+<p>Or from <link href="https://live.gnome.org/PyGObject">Python</link>:</p>
+
+<screen>
+from gi.repository import Tut
+greeter = Tut.greeter()
+greeter.greet()
+</screen>
+
+<p>Or in a <link href="https://github.com/pavouk/lgi">Lua</link> one-liner:</p>
+
+<code>
+require('lgi').require('Tut').Greeter { greetee = 'from Lua' }.greet()
+</code>
+
+<p>Or from <link href="https://github.com/mvz/ruby-gir-ffi/wiki">Ruby</link> program:</p>
+
+<code>
+require 'gir_ffi'
+GirFFI.setup :Tut
+obj = Tut::Greeter.new
+obj[:greetee] = 'from Ruby'
+obj.greet
+</code>
+
+<p>Or from <link href="https://live.gnome.org/GTK2-Perl/Introspection">Perl</link>:</p>
+
+<code>
+package TestGreeter;
+
+use Glib::Object::Introspection;
+
+Glib::Object::Introspection->setup(basename => 'Tut',
+                                   version => '0.1',
+                                   package => 'Tut');
+
+$greeter = 
+</code>
+
+<p>Sorry, got a little carried away there. Wait, <link href="https://gitorious.org/guile-gir">Guile</link>! <link href="https://live.gnome.org/JGIR">Java</link>! <link href="https://live.gnome.org/GObjectIntrospection/Users">Many more!</link></p>
+
+<links type="prevnext" />
 </page>
