@@ -45,14 +45,14 @@ here.</p>
 <code mime="text/javascript">
 const Tut = imports.gi.Tut; 
 
-let greeter = new Tut.Greeter({ greetee: 'JavaScript user' });
+let greeter = new Tut.Greeter({ greetee: 'JavaScript programmer' });
 greeter.greet();
 </code>
 
 <p>The binding allows to send in a JavaScript object as an argument to
 GObject constructors for initial values of properties. We use this to
 set the <code>greetee</code> property to <code>'JavaScript
-user'</code>.</p>
+programmer'</code>.</p>
 
 <p>To call this code from our main program, we need to add a
 dependency on gjs. FIXME. We now add an include
@@ -65,8 +65,8 @@ to <file>main.c</file>:</p>
 <p>And declare some new variables at the top of the <code>main</code> function:</p>
 
 <code mime="text/x-csrc"><![CDATA[
-    int status = 0;
     GjsContext *gjs;
+    int status = 0;
 ]]></code>
 
 <p>Instead of the code that creates a <code>TutGreeter</code> and
@@ -87,21 +87,48 @@ library, so it might be helpful to have a look in the sources, <link
 href="https://git.gnome.org/browse/gjs/tree/gjs/context.h">context.h</link>
 and <link 
 href="https://git.gnome.org/browse/gjs/tree/gjs/context.c">context.c</link>.
+</p>
 
-The <code>gjs_context_eval_file</code> function evaluates, i.e. runs,
-the JavaScript code in the specified file; there is a similar function
-called <code>gjs_context_eval</code> that evaluates JavaScript code from 
-a string.  Besides any error, these functions also deliver a status code
-from the JavaScript.  This is similar to the exit code returned by 
-regular executables, i.e., 0 means success.  We propagate this from our C
-<code>main</code> function:
+<p>The <code>gjs_context_eval_file</code> function evaluates,
+i.e. runs, the JavaScript code in the specified file; there is a
+similar function called <code>gjs_context_eval</code> that evaluates
+JavaScript code from a string.  Besides any error, these functions
+also deliver a status code from the JavaScript.  This is similar to
+the exit code returned by regular executables, i.e., 0 means success.
+We propagate this from our C <code>main</code> function:</p>
 
 <code mime="text/x-csrc"><![CDATA[
     return status;
 ]]></code>
 
+<p>To build with Gjs, we also need to add <sys>gjs-1.0</sys> to the
+list of packages sent to <cmd>pkg-config</cmd> in the
+<file>Makefile</file>.</p>
 
-<p>Compile and run it!</p>
+<p>Compile with <cmd>make</cmd> and run it. Now this happens:</p>
+
+<screen>
+<output type="prompt">$ </output><input>./greeter</input>
+<output type="error">    JS ERROR: !!!   Exception was: Error: Requiring Tut, version none: Typelib file for namespace 'Tut' (any version) not found
+    JS ERROR: !!!     message = '"Requiring Tut, version none: Typelib file for namespace 'Tut' (any version) not found"'
+    JS ERROR: !!!     fileName = '"main.js"'
+    JS ERROR: !!!     lineNumber = '15'
+    JS ERROR: !!!     stack = '"@main.js:15"'</output>
+</screen>
+
+<p>We need to make sure Gjs can find the typelib file.  Usually, this
+will be installed in a standard location where the
+<code>gi_repository</code> loader looks for typelib files. However,
+for experimenting we can set the environment variable
+<sys>GI_TYPELIB_PATH</sys>:</p>
+
+<screen>
+<output type="prompt">$ </output><input>export GI_TYPELIB_PATH=`pwd`</input>
+<output type="prompt">$ </output><input>./greeter</input>
+<output>Hello, JavaScript user!</output>
+</screen>
+
+<p>Success!</p>
 
 <links type="prevnext" />
 </page>

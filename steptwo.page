@@ -77,13 +77,11 @@ really useful for end users of your program, but it's there:</p>
 <output>greeter: Missing argument for --introspect-dump</output>
 </screen>
 
-<note style="advanced">
 <p>You don't really need to know this to use introspection, but if
 you're curious about what argument the <cmd>--introspect-dump</cmd>
 option is expecting, see the documentation
 for <link href="https://developer.gnome.org/gi/unstable/gi-girepository.html#g-irepository-dump"><code>g_irepository_dump</code></link>,
 to which the argument is sent.</p>
-</note>
 
 <note style="tip sidebar">
 <screen>
@@ -133,7 +131,7 @@ a binary format called <app>typelib</app>. This is done
 with <cmd>g-ir-compiler</cmd>:</p>
 
 <screen>
-<output type="prompt">$ </output><input>g-ir-compiler Tut-0.1.gir --output=Tut-0.1.typelib</output>
+<output type="prompt">$ </output><input>g-ir-compiler Tut-0.1.gir --output=Tut-0.1.typelib</input>
 </screen>
 
 <p>See the <link href="http://manpages.ubuntu.com/manpages/raring/man1/g-ir-compiler.1.html"><cmd>g-ir-compiler</cmd> man page</link> for full reference.</p>
@@ -146,6 +144,7 @@ with <cmd>g-ir-compiler</cmd>:</p>
   extract the names of all classes and their methods from
   a <file>.gir</file> file.</p></item>
 </list>
+</section>
 
 <links type="prevnext" />
 </page>

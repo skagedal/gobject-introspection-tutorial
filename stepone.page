@@ -20,7 +20,8 @@ method, <code>tut_greeter_greet</code>, that writes a friendly
 greeting ton standard output, and one property, <code>greetee</code>
 that holds the name of the entity to greet.</p>
 
-<p>If you're a <app>git</app> user, you can follow the steps in the tutorial by cloning a repository:</p>
+<p>If you're a git user, you can follow the steps in the tutorial by
+cloning a repository:</p>
 
 <screen>
 <output style="prompt">$ </output><input>git clone https://git.gitorious.org/gobject-introspection-tutorial/code.git tutorial-code</input>
@@ -28,8 +29,8 @@ that holds the name of the entity to greet.</p>
 <output style="prompt">$ </output><input>git checkout stepone</input>
 </screen>
 
-<p>If you prefer not to use <app>git</app>, you can just copy the
-files from the links below.</p>
+<p>If you prefer not to use git, you can just copy the files from the
+links below.</p>
 
 <p><code>TutGreeter</code> is defined
 in <link href="https://www.gitorious.org/gobject-introspection-tutorial/code/blobs/stepone/tut-greeter.h"><file>tut-greeter.h</file></link>
@@ -92,11 +93,11 @@ tut_greeter_greet (TutGreeter *greeter)
 
 <p>As you see, all code intended to be used from the outside is
 documented with <app>GtkDoc</app> headers.  This is always good
-practice, but for what we're about to do&#160;– introspection&#160;–
-it's a necessity.  GObject Introspection uses these GtkDoc sections
-with some special annotations to figure out how the function is to be
-used, so that language bindings can map things like output parameters
-to appropriate constructs.</p>
+practice, but for introspection to work, it's a necessity.  GObject
+Introspection uses these GtkDoc sections with some special annotations
+to figure out how the function is to be used, so that language
+bindings can map things like output parameters to appropriate
+constructs.</p>
 
 <p>We also have a simple <code>main</code> function
 in <link href="https://www.gitorious.org/gobject-introspection-tutorial/code/blobs/stepone/main.c"><file>main.c</file></link>:</p>
@@ -118,7 +119,7 @@ a <link href="https://www.gitorious.org/gobject-introspection-tutorial/code/blob
 In a real-world project, it's preferable to use a more sophisticated
 build system; the GNU build tool chain
 with <app>autoconf</app>, <app>automake</app> and friends is the most
-commonly used and best supported system.  For the purpose of this
+commonly used and best supported.  For the purpose of this
 tutorial, an ordinary GNU Makefile makes it easy to follow what's
 happening.  Just type <cmd>make</cmd> at the console and you should
 get a binary called <file>greeter</file>.  Run it, and feel

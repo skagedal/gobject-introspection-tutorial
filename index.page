@@ -19,18 +19,19 @@ Mallard questions:
 Yelp:
 * Can I ignore Emacs auto-save files?
 -->
+
 <section id="introduction">
 <title>Introduction</title>
 <p>
 This tutorial will show you how to use <app>GObject
 Introspection</app> to access to C code from higher level programming
 languages.  We'll use a simple "Hello World" example that only depends
-on <app>GLib</app> and <app>GObject</app>.  You are assumed to know
+on GLib and GObject.  You are assumed to know
 the basics on how developing with
-<app>GObject</app> works; if not, freshen up with the <link
+GObject works; if not, freshen up with the <link
 href="http://library.gnome.org/devel/gobject/unstable/pt02.html">GObject
 tutorial</link>. We'll look at how to use your classes from JavaScript
-using <app>Gjs</app> and Python using <app>PyGObject</app>.</p>
+using Gjs and Python using PyGObject.</p>
 </section>
 
 <links type="topic"/>
@@ -38,6 +39,13 @@ using <app>Gjs</app> and Python using <app>PyGObject</app>.</p>
 <section>
 <title>About this tutorial</title>
 
-<p>Mention FromHereToHere</p>
+<p>This tutorial was written by me, Simon Kågedal Reimer, as a way to
+learn about GObject Introspection myself. As of this writing, there
+has not been any technical review by an expert on the subject, so
+beware of inaccuracies. Some inspiration was drawn from the guide <link
+href="https://live.gnome.org/GObjectIntrospection/FromHereToThere">Creating
+a multilevel application with GObject Introspection</link> by Colin
+Walters.</p>
+
 </section>
 </page>
