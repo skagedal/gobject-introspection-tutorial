@@ -130,5 +130,16 @@ for experimenting we can set the environment variable
 
 <p>Success!</p>
 
+<section id="exercises">
+<title>Exercises</title>
+<list>
+  <item><p>Let's return to the 
+      <code>tut_greeter_greet_many</code> and
+      <code>tut_greeter_get_greet_log</code> methods introduced in
+      previous exercises. See if you can figure out how to use them
+      from JavaScript.</p></item>
+</list>
+</section>
+
 <links type="prevnext" />
 </page>

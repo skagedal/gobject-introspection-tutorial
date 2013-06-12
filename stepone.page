@@ -17,7 +17,7 @@
 <p>First, we'll create a very simple <code>GObject</code>
 called <code>TutGreeter</code>.  It has one
 method, <code>tut_greeter_greet</code>, that writes a friendly
-greeting ton standard output, and one property, <code>greetee</code>
+greeting on standard output, and one property, <code>greetee</code>
 that holds the name of the entity to greet.</p>
 
 <p>If you're a git user, you can follow the steps in the tutorial by
@@ -124,6 +124,21 @@ tutorial, an ordinary GNU Makefile makes it easy to follow what's
 happening.  Just type <cmd>make</cmd> at the console and you should
 get a binary called <file>greeter</file>.  Run it, and feel
 greeted.</p>
+
+<section id="exercises">
+<title>Exercises</title>
+<list>
+  <item><p>Add a new method, <code>tut_greeter_greet_many</code> that
+      should allow you to greet many entities at the same time.  Explore
+      various ways of passing a collection of strings using C and GLib
+      data structures.</p></item>
+  <item><p>Keep a log of every greeting made.  Add a new
+      method, <code>tut_greeter_get_greet_log</code> that gives access
+      to that log.</p></item>
+</list>
+<p>To avoid conflicts in the following steps, do the exercies in a
+separate copy of the code, like a git branch.</p>
+</section>
 
 <links type="prevnext" />
 </page>

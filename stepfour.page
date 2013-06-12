@@ -13,21 +13,61 @@
 </info>
 <title>Make it a library</title>
 
-<p>...</p>
+<p>In this part of the tutorial, we'll move the <code>TutGreeter</code>
+class to its own shared library, <sys>libtut</sys> for easy reuse from
+all our applications with greeting needs.</p>
 
-<p>Now, you can easily access your class from a JavaScript console:</p>
+<p>The <cmd>libtool</cmd> utility is a good way of creating shared and
+dynamic libraries in a portable way.  On Debian-based systems,
+use <cmd>sudo apt-get install libtool</cmd> to install it. Then you
+can compile and link the library with:</p>
+
+<screen>
+<output style="prompt">$ </output><input>libtool compile gcc `pkg-config --cflags gobject-2.0` \
+    -g tut-greeter.c -o tut-greeter.lo</input>
+<output style="prompt">$ </output><input>libtool link gcc `pkg-config --libs gobject-2.0` \
+    tut-greeter.lo -o libtutorial.la </input>
+</screen>
+
+<p>The call to <cmd>g-ir-scanner</cmd> is similar to the previous
+case, exchanging <cmd>--program</cmd> for <cmd>--library</cmd>. We
+first need to set <sys>LD_LIBRARY_PATH</sys> correctly so that the
+linker finds the library.  We can use libtool to do this for us:</p>
+
+<screen>
+<output type="prompt">$ </output><input>libtool exec g-ir-scanner tut-greeter.[ch] \
+    --library=tutorial \
+    `pkg-config --cflags gobject-2.0` --include=GObject-2.0 \
+    --namespace=Tut --nsversion=0.1 --output=Tut-0.1.gir</input>
+</screen>
+
+<p>However, for the following steps when we use the library from
+Python, we also need this set, so type:</p>
+
+<screen>
+<output type="prompt">$ </output><input>export LD_LIBRARY_PATH=`pwd`/.libs:$(LD_LIBRARY_PATH)</input>
+</screen>
+
+<p>We compile the typelib again in just the same way:</p>
+
+<screen>
+<output type="prompt">$ </output><input>g-ir-compiler Tut-0.1.gir --output=Tut-0.1.typelib</input>
+</screen>
+
+<p>Now, we're ready to easily access the class from a JavaScript console:</p>
 
 <screen>
 <output style="prompt">$ </output><input>gjs-console</input>
 
 </screen>
 
-<p>Or from <link href="https://live.gnome.org/PyGObject">Python</link>:</p>
+<p>Or from the <link href="https://live.gnome.org/PyGObject">Python</link> interpreter:</p>
 
 <screen>
-from gi.repository import Tut
-greeter = Tut.greeter()
-greeter.greet()
+<output style="prompt">&gt;&gt;&gt; </output><input>from gi.repository import Tut</input>
+<output style="prompt">&gt;&gt;&gt; </output><input>greeter = Tut.greeter()</input>
+<output style="prompt">&gt;&gt;&gt; </output><input>greeter.greet()</input>
+<output>Hello, World!</output>
 </screen>
 
 <p>Or in a <link href="https://github.com/pavouk/lgi">Lua</link> one-liner:</p>

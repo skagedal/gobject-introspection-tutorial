@@ -40,12 +40,18 @@ using Gjs and Python using PyGObject.</p>
 <title>About this tutorial</title>
 
 <p>This tutorial was written by me, Simon Kågedal Reimer, as a way to
-learn about GObject Introspection myself. As of this writing, there
-has not been any technical review by an expert on the subject, so
-beware of inaccuracies. Some inspiration was drawn from the guide <link
+learn about GObject Introspection myself. The text has not yet gotten
+a technical review by an expert on the subject, so beware of
+inaccuracies. Some inspiration was drawn from the guide <link
 href="https://live.gnome.org/GObjectIntrospection/FromHereToThere">Creating
 a multilevel application with GObject Introspection</link> by Colin
 Walters.</p>
+
+<p>Please send any corrections or suggestions to <sys>&lt;<link
+href="skagedal@gmail.com">skagedal@gmail.com</link>&gt;</sys>. Merge
+requests to the <link
+href="https://www.gitorious.org/gobject-introspection-tutorial">git
+repositories</link> at Gitorious are also appreciated.</p>
 
 </section>
 </page>

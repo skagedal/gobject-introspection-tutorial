@@ -140,9 +140,13 @@ with <cmd>g-ir-compiler</cmd>:</p>
 <title>Exercises</title>
 <list>
   <item><p>Using the programming language and an XML parsing library
-  of your choice, such as Python with lxml, write a simple script to
-  extract the names of all classes and their methods from
-  a <file>.gir</file> file.</p></item>
+      of your choice, such as Python with lxml, write a simple script
+      to extract the names of all classes and their methods from
+      a <file>.gir</file> file.</p></item>
+  <item><p>Try getting introspection right for the 
+      <code>tut_greeter_greet_many</code> and
+      <code>tut_greeter_get_greet_log</code> methods introduced in the
+      exercises on the previous page.</p></item>
 </list>
 </section>
 
