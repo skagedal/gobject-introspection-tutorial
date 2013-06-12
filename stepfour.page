@@ -13,94 +13,108 @@
 </info>
 <title>Make it a library</title>
 
+<note style="tip sidebar">
+<screen>
+<output style="prompt">$ </output><input>git checkout stepfour</input>
+<output style="prompt">$ </output><input>git diff stepthree</input>
+<output style="prompt">$ </output><input>make</input>
+</screen>
+</note>
+
 <p>In this part of the tutorial, we'll move the <code>TutGreeter</code>
 class to its own shared library, <sys>libtut</sys> for easy reuse from
 all our applications with greeting needs.</p>
 
 <p>The <cmd>libtool</cmd> utility is a good way of creating shared and
-dynamic libraries in a portable way.  On Debian-based systems,
-use <cmd>sudo apt-get install libtool</cmd> to install it. Then you
-can compile and link the library with:</p>
+dynamic libraries in a portable way.  Usually, this shell script is
+included with the distribution of any package using it, but you can
+also use a system installed version. On Debian-based systems, use
+<cmd>sudo apt-get install libtool</cmd> to install it. Then you can
+compile and link the library with:</p>
 
 <screen>
 <output style="prompt">$ </output><input>libtool compile gcc `pkg-config --cflags gobject-2.0` \
-    -g tut-greeter.c -o tut-greeter.lo</input>
+    -g -c tut-greeter.c -o tut-greeter.lo</input>
 <output style="prompt">$ </output><input>libtool link gcc `pkg-config --libs gobject-2.0` \
+    -rpath /usr/local/lib \
     tut-greeter.lo -o libtutorial.la </input>
 </screen>
 
-<p>The call to <cmd>g-ir-scanner</cmd> is similar to the previous
-case, exchanging <cmd>--program</cmd> for <cmd>--library</cmd>. We
-first need to set <sys>LD_LIBRARY_PATH</sys> correctly so that the
-linker finds the library.  We can use libtool to do this for us:</p>
+<p><cmd>libtool</cmd> is a bit picky about some things, like the order
+of the arguments to <cmd>gcc</cmd>, but the above works for me.</p>
+
+<p>The call <cmd>g-ir-scanner</cmd> is similar to the previous
+case, exchanging <cmd>--program</cmd> for <cmd>--library</cmd>.  Run 
+<cmd>g-ir-compiler</cmd> in just the same way.</p>
 
 <screen>
-<output type="prompt">$ </output><input>libtool exec g-ir-scanner tut-greeter.[ch] \
+<output type="prompt">$ </output><input>g-ir-scanner tut-greeter.[ch] \
     --library=tutorial \
     `pkg-config --cflags gobject-2.0` --include=GObject-2.0 \
     --namespace=Tut --nsversion=0.1 --output=Tut-0.1.gir</input>
-</screen>
-
-<p>However, for the following steps when we use the library from
-Python, we also need this set, so type:</p>
-
-<screen>
-<output type="prompt">$ </output><input>export LD_LIBRARY_PATH=`pwd`/.libs:$(LD_LIBRARY_PATH)</input>
-</screen>
-
-<p>We compile the typelib again in just the same way:</p>
-
-<screen>
 <output type="prompt">$ </output><input>g-ir-compiler Tut-0.1.gir --output=Tut-0.1.typelib</input>
 </screen>
 
-<p>Now, we're ready to easily access the class from a JavaScript console:</p>
+<p>Note that when <cmd>g-ir-scanner</cmd> scans a library, it compiles
+a stub program to call the <code>gi_repository_dump</code> function.
+It then needs to find the <file>libtutorial.so</file> shared library
+file, which libtool places in the <file>.libs</file> directory.  Since
+<cmd>g-ir-scanner</cmd> uses libtool itself, this happens to just
+work.  However, for the following steps to work we need to set some
+environment variables so that gjs and Python can find the library and
+the typelib file (as we did before):</p>
 
 <screen>
-<output style="prompt">$ </output><input>gjs-console</input>
-
+<output type="prompt">$ </output><input>export LD_LIBRARY_PATH=`pwd`/.libs:$LD_LIBRARY_PATH</input>
+<output type="prompt">$ </output><input>export GI_TYPELIB_PATH=`pwd`</input>
 </screen>
 
-<p>Or from the <link href="https://live.gnome.org/PyGObject">Python</link> interpreter:</p>
+<p>Now, we're ready and can easily access the class from a JavaScript.
+We can do the following to do the same job as our <file>main.c</file> did:
+</p>
 
 <screen>
+<output style="prompt">$ </output><input>gjs main.js</input>
+<output>Hello, JavaScript programmer!</output>
+</screen>
+
+<p>With <link href="https://live.gnome.org/PyGObject">PyGObject</link> installed, we can use the class from a Python interpreter:</p>
+
+<screen>
+<output style="prompt">$ </output><input>python</input>
+<output>Python 2.7.4 (default, Apr 19 2013, 18:32:33) 
+[GCC 4.7.3] on linux2
+Type "help", "copyright", "credits" or "license" for more information.</output>
 <output style="prompt">&gt;&gt;&gt; </output><input>from gi.repository import Tut</input>
-<output style="prompt">&gt;&gt;&gt; </output><input>greeter = Tut.greeter()</input>
+<output style="prompt">&gt;&gt;&gt; </output><input>greeter = Tut.Greeter(greetee = "Python programmer")</input>
 <output style="prompt">&gt;&gt;&gt; </output><input>greeter.greet()</input>
-<output>Hello, World!</output>
+<output>Hello, Python programmer!</output>
 </screen>
 
-<p>Or in a <link href="https://github.com/pavouk/lgi">Lua</link> one-liner:</p>
+<p>Here's a Lua one-liner, using the <link href="https://github.com/pavouk/lgi">lgi</link> bindings:</p>
 
 <code>
-require('lgi').require('Tut').Greeter { greetee = 'from Lua' }.greet()
+<output style="prompt">$ </output><input>lua -e 'require("lgi").require("Tut").Greeter { greetee = "Lua programmer" }:greet()'</input>
+<output>Hello, Lua programmer!</output>
 </code>
 
-<p>Or from <link href="https://github.com/mvz/ruby-gir-ffi/wiki">Ruby</link> program:</p>
+<p>Finally, a little Ruby program using the <link href="https://github.com/mvz/ruby-gir-ffi/wiki">ruby-gir-ffi</link> bindings:</p>
 
 <code>
 require 'gir_ffi'
 GirFFI.setup :Tut
 obj = Tut::Greeter.new
-obj[:greetee] = 'from Ruby'
+obj.set_property 'greetee', 'Ruby programmer'
 obj.greet
 </code>
 
-<p>Or from <link href="https://live.gnome.org/GTK2-Perl/Introspection">Perl</link>:</p>
+<p>There are many other languages you can use, like C#, Vala, Java,
+Guile and more; see <link
+href="https://live.gnome.org/GObjectIntrospection/Users">this
+page</link> for bindings.</p>
 
-<code>
-package TestGreeter;
-
-use Glib::Object::Introspection;
-
-Glib::Object::Introspection->setup(basename => 'Tut',
-                                   version => '0.1',
-                                   package => 'Tut');
-
-$greeter = 
-</code>
-
-<p>Sorry, got a little carried away there. Wait, <link href="https://gitorious.org/guile-gir">Guile</link>! <link href="https://live.gnome.org/JGIR">Java</link>! <link href="https://live.gnome.org/GObjectIntrospection/Users">Many more!</link></p>
+<p>This tutorial has barely scratched the surface of what you can do
+with GObject Introspection, but I hope it has wet your appetite!</p>
 
 <links type="prevnext" />
 </page>
