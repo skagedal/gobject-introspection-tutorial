@@ -49,6 +49,11 @@ tut_greeter_class_init (TutGreeterClass *klass)
     object_class->get_property = tut_greeter_get_property;
     object_class->finalize = tut_greeter_finalize;
 
+    /**
+     * TutGreeter:greetee:
+     *
+     * The entity to greet.
+     */
     obj_properties[PROP_GREETEE] = 
         g_param_spec_string ("greetee",
                              "Greetee",
@@ -91,16 +96,24 @@ tut_greeter_greet (TutGreeter *greeter)
 }
 ]]></code>
 
-<p>As you see, all code intended to be used from the outside is
-documented with <app>GtkDoc</app> headers.  This is always good
-practice, but for introspection to work, it's a necessity.  GObject
-Introspection uses these GtkDoc sections with some special annotations
-to figure out how the function is to be used, so that language
-bindings can map things like output parameters to appropriate
-constructs.</p>
+<p>The comments that start with <code>/**</code> are
+<app>GTK-Doc</app> comments. Everything that is part of the object's
+external API should be documented with these.  This includes functions
+like <code>tut_greeter_greet</code>, but also properties like
+<code>TutGreeter:greetee</code>, and macros, structs, enums and
+signals. See the <link
+href="https://developer.gnome.org/gtk-doc-manual/">GTK-Doc
+manual</link> for detailed information on this.</p>
 
-<p>We also have a simple <code>main</code> function
-in <link href="https://www.gitorious.org/gobject-introspection-tutorial/code/blobs/stepone/main.c"><file>main.c</file></link>:</p>
+<p>While documenting external API is always good practice, for
+introspection to work, it's a necessity.  GObject Introspection uses
+some special annotations in the GTK-Doc markup to figure out how a
+function is to be used, so that language bindings can map things like
+output parameters to appropriate constructs.</p>
+
+<p>To test the <code>TutGreeter</code>, we have a simple
+<code>main</code> function in <link
+href="https://www.gitorious.org/gobject-introspection-tutorial/code/blobs/stepone/main.c"><file>main.c</file></link>:</p>
 
 <code mime="text/x-csrc"><![CDATA[
 int main (int argc, char *argv[]) 
