@@ -22,16 +22,28 @@ Yelp:
 
 <section id="introduction">
 <title>Introduction</title>
-<p>
-This tutorial will show you how to use <app>GObject
+
+<p>This tutorial will show you how to use <app>GObject
 Introspection</app> to access to C code from higher level programming
-languages.  We'll use a simple "Hello World" example that only depends
-on GLib and GObject.  You are assumed to know
-the basics on how developing with
-GObject works; if not, freshen up with the <link
-href="http://library.gnome.org/devel/gobject/unstable/pt02.html">GObject
-tutorial</link>. We'll look at how to use your classes from JavaScript
-using Gjs and Python using PyGObject.</p>
+languages.  We will use a simple "Hello World" example that only
+depends on GLib and GObject.  You will learn:</p>
+
+<list>
+  <item>
+    <p>How to write a simple introspectable GObject class</p>
+  </item>
+  <item>
+    <p>How to introspect an executable binary</p>
+  </item>
+  <item>
+    <p>How to embed a JavaScript interpreter in an executable and
+    access your GObject</p>
+  </item>
+  <item>
+    <p>How to put your class in a library and access it from various
+    interpreted programming languages</p>
+  </item>
+</list>
 </section>
 
 <links type="topic"/>
@@ -39,15 +51,11 @@ using Gjs and Python using PyGObject.</p>
 <section>
 <title>About this tutorial</title>
 
-<p>This tutorial was written by me, Simon Kågedal Reimer, as a way to
-learn about GObject Introspection myself. The text has not yet gotten
-a technical review by an expert on the subject, so beware of
-inaccuracies. Some inspiration was drawn from the guide <link
+<p>This tutorial was written by Simon Kågedal Reimer.  Some
+inspiration was drawn from the guide <link
 href="https://live.gnome.org/GObjectIntrospection/FromHereToThere">Creating
 a multilevel application with GObject Introspection</link> by Colin
-Walters.</p>
-
-<p>Please send any corrections or suggestions to <sys>&lt;<link
+Walters.  Please send any corrections or suggestions to <sys>&lt;<link
 href="skagedal@gmail.com">skagedal@gmail.com</link>&gt;</sys>. Merge
 requests to the <link
 href="https://www.gitorious.org/gobject-introspection-tutorial">git
